@@ -6,6 +6,7 @@ Task::~Task()
         t->removeDependency(this);
 }
 
+// устанавливает зависимых от этой задачи
 void Task::setDepended(int _n, Task* _depended, ...)
 {
     while(_n > 0)
