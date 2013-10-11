@@ -1,13 +1,5 @@
 #include "task.h"
 
-Task::Task(int _memory, int _time, int _timeDispercy)
-    : m_memory(_memory),
-      m_time(_time)
-{
-    int dispercy =  qrand() % (2 * _timeDispercy) - _timeDispercy;
-    m_time += dispercy;
-}
-
 Task::~Task()
 {
     foreach(Task* t, m_depends)
@@ -34,4 +26,9 @@ void Task::removeDependency(Task *_task)
         i++;
     }
     m_depends.removeAt(i);
+}
+
+bool Task::ready()
+{
+    return !m_depends.count();
 }

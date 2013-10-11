@@ -13,12 +13,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    task.cpp \
-    modelmananger.cpp
+           mainwindow.cpp \
+           task.cpp \
+           modelmananger.cpp \
+           complextask.cpp \
+           simpletask.cpp
 
-HEADERS  += mainwindow.h \
-    task.h \
-    modelmananger.h
+HEADERS += mainwindow.h \
+           task.h \
+           modelmananger.h \
+           complextask.h \
+           simpletask.h
 
 FORMS    += mainwindow.ui

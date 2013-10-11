@@ -6,16 +6,15 @@
 class Task
 {
 public:
-    Task(int _memory, int _time, int _timeDispercy);
-    ~Task();
+    Task() {}
+    virtual ~Task() = 0;
 
     void setDepended(int _n, Task* _depended, ...);
-    void removeDependency(Task* _task);
+    virtual void removeDependency(Task* _task);
+    virtual bool ready();
 
-private:
+protected:
     QList<Task*> m_depends;
-    int m_memory;
-    int m_time;
 };
 
 #endif // TASK_H
