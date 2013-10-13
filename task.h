@@ -9,12 +9,20 @@ public:
     Task() {}
     virtual ~Task() = 0;
 
-    void setDepended(int _n, Task* _depended, ...);
-    virtual void removeDependency(Task* _task);
+    void addIncomingDepend(Task* _dependentOn);
+    void removeIncomingDependency(Task* _task);
     virtual bool ready();
 
+    virtual int time() = 0;
+    virtual int memory() = 0;
+    virtual void step() = 0;
+
 protected:
-    QList<Task*> m_depends;
+    void addOutcomingDependency(Task* _task);
+
+protected:
+    QList<Task*> m_incomingDepends;    // зависит от
+    QList<Task*> m_outcomingDepends;   // зависимые от этого
 };
 
 #endif // TASK_H

@@ -3,7 +3,8 @@
 #include "complextask.h"
 
 ModelMananger::ModelMananger(int _memorySize)
-    : m_memorySize(_memorySize)
+    : m_time(0),
+      m_memorySize(_memorySize)
 {
     Task* one   = new SimpleTask(4, 4, 2);
     Task* two   = new SimpleTask(3, 3, 1);
@@ -23,20 +24,18 @@ ModelMananger::ModelMananger(int _memorySize)
     Task* sevenSix  = new SimpleTask(3, 3, 1);
     ComplexTask* seven = new ComplexTask(3, sevenFour, sevenFive, sevenSix);
 
-    one->setDepended(1, five);
-    two->setDepended(1, four);
-    three->setDepended(2, fiveThree, sixThree);
-    four->setDepended(2, sixFour, sevenFour);
-    five->setDepended(1, sevenFive);
-    six->setDepended(1, sevenSix);
+    four->addIncomingDepend(two);
+  //  five->addIncomingDepends(2, one, three);
+    fiveOne->addIncomingDepend(one);
+    fiveThree->addIncomingDepend(three);
+    sixThree->addIncomingDepend(three);
+    sixFour->addIncomingDepend(four);
+    sevenFour->addIncomingDepend(four);
+    sevenFive->addIncomingDepend(five);
+    sevenSix->addIncomingDepend(six);
 
-    m_processQue.push_back(one);
-    m_processQue.push_back(two);
-    m_processQue.push_back(three);
-    m_processQue.push_back(four);
-    m_processQue.push_back(five);
-    m_processQue.push_back(six);
-    m_processQue.push_back(seven);
+    m_processQue << one << two << three << four << fiveOne << fiveThree << five;
+    m_processQue << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
 }
 
 int ModelMananger::calcTime()
@@ -44,8 +43,39 @@ int ModelMananger::calcTime()
     int step = 0;
     while(m_processQue.isEmpty())
     {
-
+        foreach (Task* t, m_processQue)
+           tryToProcess(t);
+        updateProcessing();
         step++;
     }
     return step;
+}
+
+void ModelMananger::singleTic()
+{
+
+}
+
+int ModelMananger::memoryLeft()
+{
+    int freeMemory = 0;
+    foreach (Task* t, m_isNowProcesing)
+        freeMemory += t->memory();
+    return freeMemory;
+}
+
+void ModelMananger::updateProcessing()
+{
+    foreach (Task* t, m_isNowProcesing)
+    {
+        t->step();
+        if(t->time() == 0)
+            m_isNowProcesing.removeOne(t);
+    }
+}
+
+void ModelMananger::tryToProcess(Task* _task)
+{
+    if(memoryLeft() >= _task->memory())
+        m_isNowProcesing << _task;
 }

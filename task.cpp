@@ -2,34 +2,33 @@
 
 Task::~Task()
 {
-    foreach(Task* t, m_depends)
-        t->removeDependency(this);
+    foreach(Task* t, m_outcomingDepends)
+        t->removeIncomingDependency(this);
 }
 
-// устанавливает зависимых от этой задачи
-void Task::setDepended(int _n, Task* _depended, ...)
+void Task::addIncomingDepend(Task *_dependentOn)
 {
-    while(_n > 0)
-    {
-        _n--;
-        m_depends.push_back(_depended);
-        _depended++;
-    }
+    m_incomingDepends << _dependentOn;
 }
 
-void Task::removeDependency(Task *_task)
+void Task::removeIncomingDependency(Task* _task)
 {
     int i = 0;
-    foreach(Task* t, m_depends)
+    foreach(Task* t, m_incomingDepends)
     {
         if(_task == t)
             break;
         i++;
     }
-    m_depends.removeAt(i);
+    m_incomingDepends.removeAt(i);
 }
 
 bool Task::ready()
 {
-    return !m_depends.count();
+    return !m_incomingDepends.count();
+}
+
+void Task::addOutcomingDependency(Task *_task)
+{
+    m_outcomingDepends << _task;
 }

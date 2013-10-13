@@ -5,7 +5,8 @@ ComplexTask::ComplexTask(int _simpleCount, Task* _task, ...)
 {
     while(_simpleCount)
     {
-        m_subTasks.push_back(_task);
+        m_subTasks << _task;
+        m_incomingDepends << _task;
         _task++;
         _simpleCount--;
     }
@@ -17,11 +18,11 @@ ComplexTask::~ComplexTask()
         delete t;
 }
 
-void ComplexTask::removeDependency(Task *_task)
-{
-    foreach(Task* t, m_subTasks)
-        t->removeDependency(_task);
-}
+//void ComplexTask::removeIncomingDependency(Task *_task)
+//{
+//    foreach(Task* t, m_subTasks)
+//        t->removeIncomingDependency(_task);
+//}
 
 bool ComplexTask::ready()
 {
@@ -30,4 +31,22 @@ bool ComplexTask::ready()
         isReady = isReady || t->ready();
 
     return isReady;
+}
+
+int ComplexTask::time()
+{
+    return 0;
+}
+
+int ComplexTask::memory()
+{
+    return 0;
+}
+
+void ComplexTask::step()
+{
+    foreach(Task* t, m_outcomingDepends)
+        t->removeIncomingDependency(this);
+
+//    Task::~Task(); // !!!!
 }

@@ -7,6 +7,9 @@ class SimpleTask : public Task
 {
 public:
     SimpleTask(int _memory, int _time, int _timeDispercy);
+    int memory();
+    int time();
+    void step();
 
 private:
     int m_memory;

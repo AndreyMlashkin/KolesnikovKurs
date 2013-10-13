@@ -10,10 +10,15 @@ public:
     int calcTime();
 
 private:
-    inline int freeMemory();
-    void putInMemory(Task* _task);
+    void singleTic();
+
+    inline int memoryLeft();
+    void tryToProcess(Task* _task);
+    void updateProcessing();
 
 private:
+    int m_time;
+
     QList<Task*> m_processQue;
     QList<Task*> m_isNowProcesing;
 
