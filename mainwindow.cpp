@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ModelMananger mananger(20);
-    qDebug() << mananger.calcTime();
+    qDebug() << "RESULT: "  << mananger.calcTime();
 }
 
 MainWindow::~MainWindow()

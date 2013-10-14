@@ -20,7 +20,8 @@ public:
 protected:
     void addOutcomingDependency(Task* _task);
 
-protected:
+//protected:
+public: // ###
     QList<Task*> m_incomingDepends;    // зависит от
     QList<Task*> m_outcomingDepends;   // зависимые от этого
 };

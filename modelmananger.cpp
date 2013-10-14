@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "simpletask.h"
 #include "modelmananger.h"
 #include "complextask.h"
@@ -41,10 +43,17 @@ ModelMananger::ModelMananger(int _memorySize)
 int ModelMananger::calcTime()
 {
     int step = 0;
-    while(m_processQue.isEmpty())
+    while(!m_processQue.isEmpty())
     {
+        int i = 0;
         foreach (Task* t, m_processQue)
-           tryToProcess(t);
+        {
+            qDebug() << "#in queue:" << i++;
+            qDebug() << t->m_incomingDepends.count();
+            qDebug() << "in queue: " << m_processQue.size();
+            qDebug() << "is processing: " << m_isNowProcesing.size() << '\n';
+            tryToProcess(t);
+        }
         updateProcessing();
         step++;
     }
@@ -58,10 +67,11 @@ void ModelMananger::singleTic()
 
 int ModelMananger::memoryLeft()
 {
-    int freeMemory = 0;
+    int usingMemory = 0;
     foreach (Task* t, m_isNowProcesing)
-        freeMemory += t->memory();
-    return freeMemory;
+        usingMemory += t->memory();
+    qDebug() << "Memory left: " << m_memorySize - usingMemory;
+    return m_memorySize - usingMemory;
 }
 
 void ModelMananger::updateProcessing()
@@ -69,13 +79,20 @@ void ModelMananger::updateProcessing()
     foreach (Task* t, m_isNowProcesing)
     {
         t->step();
-        if(t->time() == 0)
+        qDebug() << "Time to end: " << t->time();
+        if(t->time() <= 0)
+        {
             m_isNowProcesing.removeOne(t);
+            delete t;
+        }
     }
 }
 
 void ModelMananger::tryToProcess(Task* _task)
 {
-    if(memoryLeft() >= _task->memory())
+    if((memoryLeft() >= _task->memory()) && _task->ready())
+    {
         m_isNowProcesing << _task;
+        m_processQue.removeOne(_task);
+    }
 }

@@ -1,26 +1,25 @@
+#include <QDebug>
 #include "task.h"
 
 Task::~Task()
 {
     foreach(Task* t, m_outcomingDepends)
+    {
+        qDebug() << this << " removed";
         t->removeIncomingDependency(this);
+    }
 }
 
-void Task::addIncomingDepend(Task *_dependentOn)
+void Task::addIncomingDepend(Task* _dependentOn)
 {
     m_incomingDepends << _dependentOn;
+    _dependentOn->addOutcomingDependency(this);
 }
 
 void Task::removeIncomingDependency(Task* _task)
 {
-    int i = 0;
-    foreach(Task* t, m_incomingDepends)
-    {
-        if(_task == t)
-            break;
-        i++;
-    }
-    m_incomingDepends.removeAt(i);
+    if(!m_incomingDepends.removeOne(_task))
+        qDebug() << "error! dependency was not removed in Task::removeIncomingDependency";
 }
 
 bool Task::ready()

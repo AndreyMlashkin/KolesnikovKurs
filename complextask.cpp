@@ -1,13 +1,15 @@
+#include <QDebug>
 #include "complextask.h"
 
 ComplexTask::ComplexTask(int _simpleCount, Task* _task, ...)
     : Task()
 {
+    Task** task = &_task;
     while(_simpleCount)
     {
-        m_subTasks << _task;
-        m_incomingDepends << _task;
-        _task++;
+        m_subTasks << *task;
+        m_incomingDepends << *task;
+        (task)++;
         _simpleCount--;
     }
 }
@@ -28,7 +30,10 @@ bool ComplexTask::ready()
 {
     bool isReady = false;
     foreach(Task* t, m_subTasks)
+    {
+        qDebug() << t;
         isReady = isReady || t->ready();
+    }
 
     return isReady;
 }
