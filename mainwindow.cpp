@@ -7,7 +7,8 @@
 #include "ui_mainwindow.h"
 #include "modelmananger.h"
 
-const int experimentsNumber = 100;
+const int minMem = 7;
+const int maxMem = 30;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,9 +16,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    for(int i = 7; i < 30; i++)
-    {
+    setFocus();
+    connect(m_ui->run, SIGNAL(clicked()), this, SLOT(run()));
+    connect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), SLOT(clearInput()));
+}
 
+void MainWindow::run()
+{
+    int experimentsNumber = m_ui->expCount->text().toInt();
+    m_ui->progress->setMaximum(maxMem - minMem);
+
+    for(int i = minMem; i <= maxMem; i++)
+    {
         double  result = 0;
         for(int j = 0; j < experimentsNumber; j++)
         {
@@ -29,14 +39,17 @@ MainWindow::MainWindow(QWidget *parent) :
         QLabel* lbl = new QLabel();
         lbl->setText("Memory: " + QString::number(i) + "\tResult: "  + QString::number(result));
         m_ui->centralWidget->layout()->addWidget(lbl);
+
+        m_ui->progress->setValue(i - minMem);
+        qApp->processEvents();
     }
+}
 
+void MainWindow::clearInput()
+{
+    disconnect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(clearInput()));
+    m_ui->expCount->clear();
 
-//    int result = mananger.calcTime();
-
-//    m_ui->result->setText(QString::number(result));
-
- //   qDebug() << "RESULT: "  << mananger.calcTime();
 }
 
 MainWindow::~MainWindow()

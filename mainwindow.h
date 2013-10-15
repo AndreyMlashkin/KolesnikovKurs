@@ -15,6 +15,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void run();
+    void clearInput();
+
 private:
     Ui::MainWindow* m_ui;
 };
