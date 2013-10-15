@@ -26,15 +26,14 @@ ModelMananger::ModelMananger(int _memorySize)
     Task* sevenSix  = new SimpleTask(3, 3, 1);
     ComplexTask* seven = new ComplexTask(3, sevenFour, sevenFive, sevenSix);
 
-    four->addIncomingDepend(two);
-  //  five->addIncomingDepends(2, one, three);
-    fiveOne->addIncomingDepend(one);
-    fiveThree->addIncomingDepend(three);
-    sixThree->addIncomingDepend(three);
-    sixFour->addIncomingDepend(four);
-    sevenFour->addIncomingDepend(four);
-    sevenFive->addIncomingDepend(five);
-    sevenSix->addIncomingDepend(six);
+    Task::addConnection(two, four);
+    Task::addConnection(one, fiveOne);
+    Task::addConnection(three, fiveThree);
+    Task::addConnection(three, sixThree);
+    Task::addConnection(four, sixFour);
+    Task::addConnection(four, sevenFour);
+    Task::addConnection(five, sevenFive);
+    Task::addConnection(six, sevenSix);
 
     m_processQue << one << two << three << four << fiveOne << fiveThree << five;
     m_processQue << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
@@ -51,7 +50,7 @@ int ModelMananger::calcTime()
         {
             qDebug() << "#in queue:" << i++ << " " << t;
             qDebug() << "memoryLeft: " << memoryLeft();
-            qDebug() << "incoming: " << t->m_incomingDepends.count();
+            //qDebug() << "incoming: " << t->m_incomingDepends.count();
             qDebug() << "in queue: " << m_processQue.size();
             qDebug() << "is processing: " << m_isNowProcesing.size() << '\n';
             tryToProcess(t);

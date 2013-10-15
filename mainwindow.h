@@ -17,6 +17,7 @@ public:
 
 public slots:
     void run();
+    void clear();
     void clearInput();
 
 private:

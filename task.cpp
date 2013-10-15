@@ -6,16 +6,9 @@ Task::~Task()
     qDebug() << this << " removed";
     foreach(Task* t, m_outcomingDepends)
     {
-//        qDebug() << this << " removed";
         t->removeIncomingDependency(this);
         qDebug() << "   freed: " << t;
     }
-}
-
-void Task::addIncomingDepend(Task* _dependentOn)
-{
-    m_incomingDepends << _dependentOn;
-    _dependentOn->addOutcomingDependency(this);
 }
 
 void Task::removeIncomingDependency(Task* _task)
@@ -27,6 +20,17 @@ void Task::removeIncomingDependency(Task* _task)
 bool Task::ready()
 {
     return !m_incomingDepends.count();
+}
+
+void Task::addConnection(Task* _dominator, Task* _depended)
+{
+    _dominator->addOutcomingDependency(_depended);
+    _depended->addIncomingDepend(_dominator);
+}
+
+void Task::addIncomingDepend(Task* _dependentOn)
+{
+    m_incomingDepends << _dependentOn;
 }
 
 void Task::addOutcomingDependency(Task *_task)

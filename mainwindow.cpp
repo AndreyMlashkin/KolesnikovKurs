@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::run()
 {
     int experimentsNumber = m_ui->expCount->text().toInt();
+    clear();
     m_ui->progress->setMaximum(maxMem - minMem);
 
     for(int i = minMem; i <= maxMem; i++)
@@ -43,6 +44,20 @@ void MainWindow::run()
         m_ui->progress->setValue(i - minMem);
         qApp->processEvents();
     }
+}
+
+void MainWindow::clear()
+{
+    QObjectList children = m_ui->centralWidget->layout()->children();
+
+    qDebug() << m_ui->centralWidget->layout()->children().size();
+    foreach(QObject* o, children)
+    {
+        QLabel* label = static_cast<QLabel*>(o);
+        if(label)
+            m_ui->centralWidget->layout()->removeWidget(label);
+    }
+    qDebug() << m_ui->centralWidget->layout()->children().size();
 }
 
 void MainWindow::clearInput()
