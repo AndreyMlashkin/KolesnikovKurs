@@ -7,11 +7,11 @@ class Task
 {
 public:
     Task() {}
-    virtual ~Task() = 0;
+    virtual ~Task();
 
     void addIncomingDepend(Task* _dependentOn);
     void removeIncomingDependency(Task* _task);
-    virtual bool ready();
+    bool ready();
 
     virtual int time() = 0;
     virtual int memory() = 0;
@@ -24,6 +24,8 @@ protected:
 public: // ###
     QList<Task*> m_incomingDepends;    // зависит от
     QList<Task*> m_outcomingDepends;   // зависимые от этого
+
+    friend class ComplexTask;
 };
 
 #endif // TASK_H

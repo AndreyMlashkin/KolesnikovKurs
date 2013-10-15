@@ -7,8 +7,8 @@ class ComplexTask : public Task
 {
 public:
     ComplexTask(int _simpleCount, Task* _task, ...);
-    ~ComplexTask();
-    bool ready();
+//    ~ComplexTask();
+//    bool ready();
 
     int time();
     int memory();
@@ -16,10 +16,10 @@ public:
     void step();
 
 private:
-    void addIncomingDepend(Task*) {}
+//    void addIncomingDepend(Task*) {}
 
-private:
-    QList<Task*> m_subTasks;
+//private:
+//    QList<Task*> m_subTasks;
 };
 
 #endif  // COMPLEXTASK_H

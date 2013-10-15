@@ -3,10 +3,12 @@
 
 Task::~Task()
 {
+    qDebug() << this << " removed";
     foreach(Task* t, m_outcomingDepends)
     {
-        qDebug() << this << " removed";
+//        qDebug() << this << " removed";
         t->removeIncomingDependency(this);
+        qDebug() << "   freed: " << t;
     }
 }
 

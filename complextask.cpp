@@ -7,18 +7,17 @@ ComplexTask::ComplexTask(int _simpleCount, Task* _task, ...)
     Task** task = &_task;
     while(_simpleCount)
     {
-        m_subTasks << *task;
+//        m_subTasks << *task;
         m_incomingDepends << *task;
+        (*task)->addOutcomingDependency(this);
         (task)++;
         _simpleCount--;
     }
 }
 
-ComplexTask::~ComplexTask()
-{
-    foreach(Task* t, m_subTasks)
-        delete t;
-}
+//ComplexTask::~ComplexTask()
+//{
+//}
 
 //void ComplexTask::removeIncomingDependency(Task *_task)
 //{
@@ -26,17 +25,17 @@ ComplexTask::~ComplexTask()
 //        t->removeIncomingDependency(_task);
 //}
 
-bool ComplexTask::ready()
-{
-    bool isReady = false;
-    foreach(Task* t, m_subTasks)
-    {
-        qDebug() << t;
-        isReady = isReady || t->ready();
-    }
+//bool ComplexTask::ready()
+//{
+//    bool isReady = false;
+//    foreach(Task* t, m_subTasks)
+//    {
+//        qDebug() << t;
+//        isReady = isReady || t->ready();
+//    }
 
-    return isReady;
-}
+//    return isReady;
+//}
 
 int ComplexTask::time()
 {

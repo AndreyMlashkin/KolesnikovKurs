@@ -38,6 +38,7 @@ ModelMananger::ModelMananger(int _memorySize)
 
     m_processQue << one << two << three << four << fiveOne << fiveThree << five;
     m_processQue << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
+    qDebug() << one << two << three << four << fiveOne << fiveThree << five << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
 }
 
 int ModelMananger::calcTime()
@@ -48,8 +49,9 @@ int ModelMananger::calcTime()
         int i = 0;
         foreach (Task* t, m_processQue)
         {
-            qDebug() << "#in queue:" << i++;
-            qDebug() << t->m_incomingDepends.count();
+            qDebug() << "#in queue:" << i++ << " " << t;
+            qDebug() << "memoryLeft: " << memoryLeft();
+            qDebug() << "incoming: " << t->m_incomingDepends.count();
             qDebug() << "in queue: " << m_processQue.size();
             qDebug() << "is processing: " << m_isNowProcesing.size() << '\n';
             tryToProcess(t);
@@ -70,7 +72,6 @@ int ModelMananger::memoryLeft()
     int usingMemory = 0;
     foreach (Task* t, m_isNowProcesing)
         usingMemory += t->memory();
-    qDebug() << "Memory left: " << m_memorySize - usingMemory;
     return m_memorySize - usingMemory;
 }
 
