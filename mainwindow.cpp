@@ -39,7 +39,7 @@ void MainWindow::run()
 
         QLabel* lbl = new QLabel();
         lbl->setText("Memory: " + QString::number(i) + "\tResult: "  + QString::number(result));
-        m_ui->centralWidget->layout()->addWidget(lbl);
+        m_ui->labels->addWidget(lbl);// centralWidget->layout()->addWidget(lbl);
 
         m_ui->progress->setValue(i - minMem);
         qApp->processEvents();
@@ -48,16 +48,14 @@ void MainWindow::run()
 
 void MainWindow::clear()
 {
-    QObjectList children = m_ui->centralWidget->layout()->children();
-
-    qDebug() << m_ui->centralWidget->layout()->children().size();
-    foreach(QObject* o, children)
+    QLayoutItem *item;
+    while(item = m_ui->labels->takeAt(0))
     {
-        QLabel* label = static_cast<QLabel*>(o);
-        if(label)
-            m_ui->centralWidget->layout()->removeWidget(label);
+        if (item->widget())
+                delete item->widget();
+        delete item;
     }
-    qDebug() << m_ui->centralWidget->layout()->children().size();
+
 }
 
 void MainWindow::clearInput()

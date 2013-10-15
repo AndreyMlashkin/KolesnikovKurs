@@ -39,6 +39,9 @@
      </layout>
     </item>
     <item>
+     <layout class="QVBoxLayout" name="labels"/>
+    </item>
+    <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
