@@ -2,6 +2,7 @@
 #include <QLayout>
 #include <QString>
 #include <QLabel>
+#include <QIntValidator>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -16,14 +17,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    setFocus();
+ //   setFocus();
     connect(m_ui->run, SIGNAL(clicked()), this, SLOT(run()));
     connect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), SLOT(clearInput()));
 }
 
 void MainWindow::run()
 {
+    qDebug() << "run";
     int experimentsNumber = m_ui->expCount->text().toInt();
+    if(experimentsNumber <= 0)
+        return;
+
     clear();
     m_ui->progress->setMaximum(maxMem - minMem);
 
@@ -39,7 +44,7 @@ void MainWindow::run()
 
         QLabel* lbl = new QLabel();
         lbl->setText("Memory: " + QString::number(i) + "\tResult: "  + QString::number(result));
-        m_ui->labels->addWidget(lbl);// centralWidget->layout()->addWidget(lbl);
+        m_ui->labels->addWidget(lbl);
 
         m_ui->progress->setValue(i - minMem);
         qApp->processEvents();
@@ -55,17 +60,18 @@ void MainWindow::clear()
                 delete item->widget();
         delete item;
     }
-
 }
 
 void MainWindow::clearInput()
 {
     disconnect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(clearInput()));
     m_ui->expCount->clear();
-
+    m_ui->expCount->setFont(QFont());
+    m_ui->expCount->setValidator(new QIntValidator);
 }
 
 MainWindow::~MainWindow()
 {
+    clear();
     delete m_ui;
 }

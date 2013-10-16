@@ -37,7 +37,7 @@ ModelMananger::ModelMananger(int _memorySize)
 
     m_processQue << one << two << three << four << fiveOne << fiveThree << five;
     m_processQue << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
-    qDebug() << one << two << three << four << fiveOne << fiveThree << five << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
+    //qDebug() << one << two << three << four << fiveOne << fiveThree << five << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
 }
 
 int ModelMananger::calcTime()
@@ -48,11 +48,11 @@ int ModelMananger::calcTime()
         int i = 0;
         foreach (Task* t, m_processQue)
         {
-            qDebug() << "#in queue:" << i++ << " " << t;
-            qDebug() << "memoryLeft: " << memoryLeft();
-            //qDebug() << "incoming: " << t->m_incomingDepends.count();
-            qDebug() << "in queue: " << m_processQue.size();
-            qDebug() << "is processing: " << m_isNowProcesing.size() << '\n';
+            //qDebug() << "#in queue:" << i++ << " " << t;
+            //qDebug() << "memoryLeft: " << memoryLeft();
+            ////qDebug() << "incoming: " << t->m_incomingDepends.count();
+            //qDebug() << "in queue: " << m_processQue.size();
+            //qDebug() << "is processing: " << m_isNowProcesing.size() << '\n';
             tryToProcess(t);
         }
         updateProcessing();
@@ -79,7 +79,7 @@ void ModelMananger::updateProcessing()
     foreach (Task* t, m_isNowProcesing)
     {
         t->step();
-        qDebug() << "Time to end: " << t->time();
+        //qDebug() << "Time to end: " << t->time();
         if(t->time() <= 0)
         {
             m_isNowProcesing.removeOne(t);
