@@ -24,14 +24,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::run()
 {
-    qDebug() << "run";
+    m_report.clear();
     int experimentsNumber = m_ui->expCount->text().toInt();
     if(experimentsNumber <= 0)
         return;
 
     clear();
     m_ui->progress->setMaximum(maxMem - minMem);
+    qApp->processEvents();
 
+//    int i = 10;
     for(int i = minMem; i <= maxMem; i++)
     {
         double  result = 0;

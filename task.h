@@ -16,6 +16,8 @@ public:
     virtual int memory() { return 0; }
     virtual void step() = 0;
 
+    const QList<Task*> getOutcomingDepends() const;
+
     static void addConnection(Task* _dominator, Task* _depended);
 
 protected:

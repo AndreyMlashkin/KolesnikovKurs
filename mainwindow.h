@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+#include <QVector>
+#include <QHash>
+
 namespace Ui {
 class MainWindow;
 }
@@ -22,6 +25,7 @@ public slots:
 
 private:
     Ui::MainWindow* m_ui;
+    QHash<QVector<int> > m_report;
 };
 
 #endif // MAINWINDOW_H

@@ -22,6 +22,11 @@ bool Task::ready()
     return !m_incomingDepends.count();
 }
 
+const QList<Task*> Task::getOutcomingDepends() const
+{
+    return m_outcomingDepends;
+}
+
 void Task::addConnection(Task* _dominator, Task* _depended)
 {
     _dominator->addOutcomingDependency(_depended);

@@ -50,7 +50,7 @@ int ModelMananger::calcTime()
         {
             //qDebug() << "#in queue:" << i++ << " " << t;
             //qDebug() << "memoryLeft: " << memoryLeft();
-            ////qDebug() << "incoming: " << t->m_incomingDepends.count();
+              //qDebug() << "incoming: " << t->m_incomingDepends.count();
             //qDebug() << "in queue: " << m_processQue.size();
             //qDebug() << "is processing: " << m_isNowProcesing.size() << '\n';
             tryToProcess(t);
@@ -82,8 +82,11 @@ void ModelMananger::updateProcessing()
         //qDebug() << "Time to end: " << t->time();
         if(t->time() <= 0)
         {
+            const QList<Task*> candidatesToProcess = t->getOutcomingDepends();
             m_isNowProcesing.removeOne(t);
             delete t;
+            foreach(Task* candidat, candidatesToProcess)
+                tryToProcess(candidat);
         }
     }
 }
