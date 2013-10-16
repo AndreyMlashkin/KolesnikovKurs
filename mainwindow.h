@@ -25,7 +25,7 @@ public slots:
 
 private:
     Ui::MainWindow* m_ui;
-    QHash<QVector<int> > m_report;
+    QHash<int, QVector<int> > m_report;
 };
 
 #endif // MAINWINDOW_H

@@ -33,7 +33,6 @@ void MainWindow::run()
     m_ui->progress->setMaximum(maxMem - minMem);
     qApp->processEvents();
 
-//    int i = 10;
     for(int i = minMem; i <= maxMem; i++)
     {
         double  result = 0;
