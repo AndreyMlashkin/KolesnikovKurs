@@ -3,8 +3,7 @@
 
 #include <QMainWindow>
 
-#include <QVector>
-#include <QHash>
+#include <QMultiHash>
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +24,7 @@ public slots:
 
 private:
     Ui::MainWindow* m_ui;
-    QHash<int, QVector<int> > m_report;
+    QMultiHash<int, int> m_report;
 };
 
 #endif // MAINWINDOW_H

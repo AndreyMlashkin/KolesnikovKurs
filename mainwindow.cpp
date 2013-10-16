@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
- //   setFocus();
+    setFocus();
     connect(m_ui->run, SIGNAL(clicked()), this, SLOT(run()));
     connect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), SLOT(clearInput()));
 }
@@ -30,22 +30,31 @@ void MainWindow::run()
         return;
 
     clear();
-    m_ui->progress->setMaximum(maxMem - minMem);
+
+    int itemsCount = maxMem - minMem;
+    m_ui->progress->setMaximum(itemsCount);
+    m_ui->result->setRowCount(itemsCount);
+
     qApp->processEvents();
 
     for(int i = minMem; i <= maxMem; i++)
     {
-        double  result = 0;
+        double average = 0;
         for(int j = 0; j < experimentsNumber; j++)
         {
             ModelMananger mananger(i);
-            result += mananger.calcTime();
-        }
-        result /= experimentsNumber;
+            int res = mananger.calcTime();
+            m_report.insert(i, res);
 
-        QLabel* lbl = new QLabel();
-        lbl->setText("Memory: " + QString::number(i) + "\tResult: "  + QString::number(result));
-        m_ui->labels->addWidget(lbl);
+            average += res;
+        }
+        average /= experimentsNumber;
+
+        QTableWidgetItem* newItem = new QTableWidgetItem("Memory: " + QString::number(i));
+        m_ui->result->setItem(i - minMem, 0, newItem);
+
+        newItem = new QTableWidgetItem("Result: "  + QString::number(average));
+        m_ui->result->setItem(i - minMem, 1, newItem);
 
         m_ui->progress->setValue(i - minMem);
         qApp->processEvents();
@@ -54,13 +63,7 @@ void MainWindow::run()
 
 void MainWindow::clear()
 {
-    QLayoutItem *item;
-    while(item = m_ui->labels->takeAt(0))
-    {
-        if (item->widget())
-                delete item->widget();
-        delete item;
-    }
+    m_ui->result->clear();
 }
 
 void MainWindow::clearInput()

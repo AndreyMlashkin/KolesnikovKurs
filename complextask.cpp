@@ -12,9 +12,3 @@ ComplexTask::ComplexTask(int _simpleCount, Task* _task, ...)
         _simpleCount--;
     }
 }
-
-void ComplexTask::step()
-{
-//    foreach(Task* t, m_outcomingDepends)
-//        t->removeIncomingDependency(this);
-}

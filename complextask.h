@@ -7,7 +7,7 @@ class ComplexTask : public Task
 {
 public:
     ComplexTask(int _simpleCount, Task* _task, ...);
-    void step();
+    void step() {}
 
 private:
 };
