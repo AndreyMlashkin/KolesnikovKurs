@@ -80,6 +80,7 @@ void MainWindow::initChart()
 
 //    m_chart->xAxis->setRange(minMem-1, maxMem+1);
 //    m_chart->yAxis->setRange(0, 40);
+
     m_chart->axisRect()->setupFullAxesBox();
 
     m_chart->plotLayout()->insertRow(0);
@@ -90,6 +91,13 @@ void MainWindow::initChart()
     m_chart->legend->setVisible(true);
     QFont legendFont = font();
     legendFont.setPointSize(10);
+
+    if(!m_chart->graph())
+    {
+        m_chart->addGraph();
+     //   m_chart->graph()->setLineStyle(QCPGraph::lsImpulse);
+    }
+
 
     m_chart->resize(500, 500);
 }
@@ -105,8 +113,6 @@ void MainWindow::clearInput()
 void MainWindow::plotGraphics(int _memory)
 {
     _memory += minMem;
-    if(!m_chart->graph())
-        m_chart->addGraph();
 
     QPen graphPen;
     graphPen.setColor(Qt::black);
