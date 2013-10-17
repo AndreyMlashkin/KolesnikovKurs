@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,12 +18,14 @@ SOURCES += main.cpp\
            task.cpp \
            modelmananger.cpp \
            complextask.cpp \
-           simpletask.cpp
+           simpletask.cpp \
+           qcustomplot/qcustomplot.cpp
 
 HEADERS += mainwindow.h \
            task.h \
            modelmananger.h \
            complextask.h \
-           simpletask.h
+           simpletask.h \
+           qcustomplot/qcustomplot.h
 
 FORMS    += mainwindow.ui

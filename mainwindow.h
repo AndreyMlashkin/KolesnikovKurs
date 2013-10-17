@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 #include <QMultiHash>
 
-namespace Ui {
-class MainWindow;
+class QCustomPlot;
+
+namespace Ui
+{
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -19,12 +21,18 @@ public:
 
 public slots:
     void run();
-    void clear();
     void clearInput();
+
+    void plotGraphics(int _memory);
+
+private:
+    void clear();
+    inline void initChart();
 
 private:
     Ui::MainWindow* m_ui;
     QMultiHash<int, int> m_report;
+    QCustomPlot* m_chart;
 };
 
 #endif // MAINWINDOW_H

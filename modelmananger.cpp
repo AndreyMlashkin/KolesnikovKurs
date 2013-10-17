@@ -45,7 +45,6 @@ int ModelMananger::calcTime()
     int step = 0;
     while(!m_processQue.isEmpty())
     {
-        int i = 0;
         foreach (Task* t, m_processQue)
         {
             //qDebug() << "#in queue:" << i++ << " " << t;
