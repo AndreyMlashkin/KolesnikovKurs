@@ -26,14 +26,14 @@ ModelMananger::ModelMananger(int _memorySize)
     Task* sevenSix  = new SimpleTask(3, 3, 1);
     ComplexTask* seven = new ComplexTask(3, sevenFour, sevenFive, sevenSix);
 
-    Task::addConnection(two, four);
-    Task::addConnection(one, fiveOne);
+    Task::addConnection(two,   four);
+    Task::addConnection(one,   fiveOne);
     Task::addConnection(three, fiveThree);
     Task::addConnection(three, sixThree);
-    Task::addConnection(four, sixFour);
-    Task::addConnection(four, sevenFour);
-    Task::addConnection(five, sevenFive);
-    Task::addConnection(six, sevenSix);
+    Task::addConnection(four,  sixFour);
+    Task::addConnection(four,  sevenFour);
+    Task::addConnection(five,  sevenFive);
+    Task::addConnection(six,   sevenSix);
 
     m_processQue << one << two << three << four << fiveOne << fiveThree << five;
     m_processQue << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;

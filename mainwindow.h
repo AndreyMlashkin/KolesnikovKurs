@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QMultiHash>
+#include <QMultiMap>
 
 class QCustomPlot;
 
@@ -30,11 +30,11 @@ private:
     inline void initChart();
     void writeReport();
 
-    void outputInConsole(const QHash<int, int>& _dispercy);
+    void outputInConsole(const QMap<int, int>& _dispercy);
 
 private:
     Ui::MainWindow* m_ui;
-    QMultiHash<int, int> m_report;
+    QMultiMap<int, int> m_report;
     QCustomPlot* m_chart;
 };
 

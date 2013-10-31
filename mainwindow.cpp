@@ -103,7 +103,7 @@ void MainWindow::initChart()
     m_chart->resize(500, 500);
 }
 
-void MainWindow::outputInConsole(const QHash<int, int>& _dispercy)
+void MainWindow::outputInConsole(const QMap<int, int> &_dispercy)
 {
     static int num = 0;
     num++;
@@ -111,7 +111,7 @@ void MainWindow::outputInConsole(const QHash<int, int>& _dispercy)
 
     qDebug() << "\n--- Experiment N" << num << " ---";
 
-    QHashIterator<int, int> i(_dispercy);
+    QMapIterator<int, int> i(_dispercy);
     while(i.hasNext())
     {
         i.next();
@@ -138,14 +138,14 @@ void MainWindow::plotGraphics(int _memory)
 
     QList<int> values = m_report.values(_memory);
 
-    QHash<int, int> dispercy;
+    QMap<int, int> dispercy;
     foreach(int time, values)
         dispercy[time] += 1;
 
     QVector<double> time, quantaty;
 
     int minTime = 1000000000, maxTime = -1, maxQuataty = -1;
-    QHashIterator<int, int> i(dispercy);
+    QMapIterator<int, int> i(dispercy);
     while(i.hasNext())
     {
         i.next();
