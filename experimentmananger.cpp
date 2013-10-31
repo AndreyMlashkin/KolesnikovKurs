@@ -1,10 +1,10 @@
 #include <QDebug>
 
 #include "simpletask.h"
-#include "modelmananger.h"
+#include "experimentmananger.h"
 #include "complextask.h"
 
-ModelMananger::ModelMananger(int _memorySize)
+ExperimentMananger::ExperimentMananger(int _memorySize)
     : m_time(0),
       m_memorySize(_memorySize)
 {
@@ -40,7 +40,7 @@ ModelMananger::ModelMananger(int _memorySize)
     //qDebug() << one << two << three << four << fiveOne << fiveThree << five << sixThree << sixFour << six << sevenFour << sevenFive << sevenSix << seven;
 }
 
-int ModelMananger::calcTime()
+int ExperimentMananger::calcTime()
 {
     int step = 0;
     while(!m_processQue.isEmpty())
@@ -60,7 +60,7 @@ int ModelMananger::calcTime()
     return step;
 }
 
-int ModelMananger::memoryLeft()
+int ExperimentMananger::memoryLeft()
 {
     int usingMemory = 0;
     foreach (Task* t, m_isNowProcesing)
@@ -68,7 +68,7 @@ int ModelMananger::memoryLeft()
     return m_memorySize - usingMemory;
 }
 
-void ModelMananger::updateProcessing()
+void ExperimentMananger::updateProcessing()
 {
     foreach (Task* t, m_isNowProcesing)
     {
@@ -85,7 +85,7 @@ void ModelMananger::updateProcessing()
     }
 }
 
-void ModelMananger::tryToProcess(Task* _task)
+void ExperimentMananger::tryToProcess(Task* _task)
 {
     if((memoryLeft() >= _task->memory()) && _task->ready())
     {

@@ -7,14 +7,15 @@
 #include <QMapIterator>
 #include <QMap>
 
+#include "modelapi.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "modelmananger.h"
+#include "experimentseriesmananger.h"
 
 #include "qcustomplot/qcustomplot.h"
 
-const int minMem = 7;
-const int maxMem = 30;
+//const int MIN_MEM = 7;
+//const int MAX_MEM = 30;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     initChart();
 
     setFocus();
-    connect(m_ui->run, SIGNAL(clicked()), this, SLOT(run()));
+    connect(m_ui->run, SIGNAL(clicked()), this, SLOT(compute()));
     connect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), SLOT(clearInput()));
     connect(m_ui->result, SIGNAL(cellClicked(int,int)), this, SLOT(plotGraphics(int)));
 }
 
-void MainWindow::run()
+void MainWindow::compute()
 {
     m_report.clear();
     int experimentsNumber = m_ui->expCount->text().toInt();
@@ -39,34 +40,43 @@ void MainWindow::run()
 
     clear();
 
-    int itemsCount = maxMem - minMem;
+    int itemsCount = MAX_MEM - MIN_MEM;
     m_ui->progress->setMaximum(itemsCount);
     m_ui->result->setRowCount(itemsCount);
 
     qApp->processEvents();
 
-    for(int i = minMem; i <= maxMem; i++)
-    {
-        double average = 0;
-        for(int j = 0; j < experimentsNumber; j++)
-        {
-            ModelMananger mananger(i);
-            int res = mananger.calcTime();
-            m_report.insert(i, res);
+//    for(int i = MIN_MEM; i <= MAX_MEM; i++)
+//    {
+//        double average = 0;
+//        for(int j = 0; j < experimentsNumber; j++)
+//        {
+//            ExperimentMananger mananger(i);
+//            int res = mananger.calcTime();
+//            m_report.insert(i, res);
 
-            average += res;
-        }
-        average /= experimentsNumber;
+//            average += res;
+//        }
+//        average /= experimentsNumber;
+//        rowFinished(i, average);
+//    }
+    ExperimentSeriesMananger* m = new ExperimentSeriesMananger();
+  //  m->runExperiments(experimentsNumber);
+    connect(m, SIGNAL(rowFinished(int, double)), this, SLOT(rowFinished(int,double)));
+    m->runExperiments(experimentsNumber);
+}
 
-        QTableWidgetItem* newItem = new QTableWidgetItem("Memory: " + QString::number(i));
-        m_ui->result->setItem(i - minMem, 0, newItem);
+void MainWindow::rowFinished(int _row, double _value)
+{
+    qDebug() << "rowFinished";
+    QTableWidgetItem* newItem = new QTableWidgetItem("Memory: " + QString::number(_row));
+    m_ui->result->setItem(_row - MIN_MEM, 0, newItem);
 
-        newItem = new QTableWidgetItem("Result: "  + QString::number(average));
-        m_ui->result->setItem(i - minMem, 1, newItem);
+    newItem = new QTableWidgetItem("Result: "  + QString::number(_value));
+    m_ui->result->setItem(_row - MIN_MEM, 1, newItem);
 
-        m_ui->progress->setValue(i - minMem);
-        qApp->processEvents();
-    }
+    m_ui->progress->setValue(_row - MIN_MEM);
+    qApp->processEvents();
 }
 
 void MainWindow::clear()
@@ -79,7 +89,7 @@ void MainWindow::initChart()
     m_chart->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
                                     QCP::iSelectLegend | QCP::iSelectPlottables);
 
-//    m_chart->xAxis->setRange(minMem-1, maxMem+1);
+//    m_chart->xAxis->setRange(MIN_MEM-1, MAX_MEM+1);
 //    m_chart->yAxis->setRange(0, 40);
 
     m_chart->axisRect()->setupFullAxesBox();
@@ -107,7 +117,6 @@ void MainWindow::outputInConsole(const QMap<int, int> &_dispercy)
 {
     static int num = 0;
     num++;
-    //QMap<int, int> map = (_dispercy);
 
     qDebug() << "\n--- Experiment N" << num << " ---";
 
@@ -129,7 +138,7 @@ void MainWindow::clearInput()
 
 void MainWindow::plotGraphics(int _memory)
 {
-    _memory += minMem;
+    _memory += MIN_MEM;
 
     QPen graphPen;
     graphPen.setColor(Qt::black);

@@ -1,12 +1,12 @@
-#ifndef MODELMANANGER_H
-#define MODELMANANGER_H
+#ifndef EXPERIMENTMANANGER_H
+#define EXPERIMENTMANANGER_H
 
 #include <QList>
 class Task;
-class ModelMananger
+class ExperimentMananger
 {
 public:
-    ModelMananger(int _memorySize);
+    ExperimentMananger(int _memorySize);
     int calcTime();
 
 private:
@@ -23,4 +23,4 @@ private:
     const int m_memorySize;
 };
 
-#endif // MODELMANANGER_H
+#endif // EXPERIMENTMANANGER_H

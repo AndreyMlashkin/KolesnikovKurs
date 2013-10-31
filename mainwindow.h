@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QMultiMap>
 
+class ExperimentSeriesMananger;
+
 class QCustomPlot;
 
 namespace Ui
@@ -20,7 +22,9 @@ public:
     ~MainWindow();
 
 public slots:
-    void run();
+    void compute();
+    void rowFinished(int _row, double _value);
+
     void clearInput();
 
     void plotGraphics(int _memory);
@@ -28,7 +32,6 @@ public slots:
 private:
     void clear();
     inline void initChart();
-    void writeReport();
 
     void outputInConsole(const QMap<int, int>& _dispercy);
 

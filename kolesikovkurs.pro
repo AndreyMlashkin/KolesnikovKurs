@@ -16,16 +16,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            task.cpp \
-           modelmananger.cpp \
            complextask.cpp \
            simpletask.cpp \
-           qcustomplot/qcustomplot.cpp
+           experimentmananger.cpp \
+           qcustomplot/qcustomplot.cpp \
+    experimentseriesmananger.cpp
 
 HEADERS += mainwindow.h \
            task.h \
-           modelmananger.h \
            complextask.h \
            simpletask.h \
-           qcustomplot/qcustomplot.h
+           experimentmananger.h \
+           qcustomplot/qcustomplot.h \
+    experimentseriesmananger.h \
+    modelapi.h
 
 FORMS    += mainwindow.ui
