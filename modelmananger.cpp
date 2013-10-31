@@ -60,11 +60,6 @@ int ModelMananger::calcTime()
     return step;
 }
 
-void ModelMananger::singleTic()
-{
-
-}
-
 int ModelMananger::memoryLeft()
 {
     int usingMemory = 0;

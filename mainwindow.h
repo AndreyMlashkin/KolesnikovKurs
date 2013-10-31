@@ -28,6 +28,9 @@ public slots:
 private:
     void clear();
     inline void initChart();
+    void writeReport();
+
+    void outputInConsole(const QHash<int, int>& _dispercy);
 
 private:
     Ui::MainWindow* m_ui;

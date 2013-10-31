@@ -4,7 +4,8 @@
 #include <QLabel>
 #include <QIntValidator>
 #include <QVector>
-#include <QHashIterator>
+#include <QMapIterator>
+#include <QMap>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -95,11 +96,27 @@ void MainWindow::initChart()
     if(!m_chart->graph())
     {
         m_chart->addGraph();
-     //   m_chart->graph()->setLineStyle(QCPGraph::lsImpulse);
+        m_chart->graph()->setLineStyle(QCPGraph::lsLine);
+
+        m_chart->graph()->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, 7));
     }
-
-
     m_chart->resize(500, 500);
+}
+
+void MainWindow::outputInConsole(const QHash<int, int>& _dispercy)
+{
+    static int num = 0;
+    num++;
+    //QMap<int, int> map = (_dispercy);
+
+    qDebug() << "\n--- Experiment N" << num << " ---";
+
+    QHashIterator<int, int> i(_dispercy);
+    while(i.hasNext())
+    {
+        i.next();
+        qDebug() << "t=" << i.key() << "\tn="  << i.value();
+    }
 }
 
 void MainWindow::clearInput()
@@ -149,6 +166,8 @@ void MainWindow::plotGraphics(int _memory)
 
     m_chart->replot();
     m_chart->show();
+
+    outputInConsole(dispercy);
 }
 
 MainWindow::~MainWindow()

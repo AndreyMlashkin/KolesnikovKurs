@@ -10,8 +10,6 @@ public:
     int calcTime();
 
 private:
-    void singleTic();
-
     inline int memoryLeft();
     void tryToProcess(Task* _task);
     void updateProcessing();
