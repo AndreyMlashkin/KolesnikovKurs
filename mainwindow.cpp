@@ -1,11 +1,4 @@
 #include <QDebug>
-#include <QLayout>
-#include <QString>
-#include <QLabel>
-#include <QIntValidator>
-#include <QVector>
-#include <QMapIterator>
-#include <QMap>
 
 #include "modelapi.h"
 #include "mainwindow.h"
@@ -29,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::compute()
 {
+//    m_computeMutex.lock();
     int experimentsNumber = m_ui->expCount->text().toInt();
     if(experimentsNumber <= 0)
         return;
@@ -41,8 +35,10 @@ void MainWindow::compute()
 
     qApp->processEvents();
 
-    connect(m_seriesMananger, SIGNAL(rowFinished(int, double)), this, SLOT(rowFinished(int,double)));
+    connect(m_seriesMananger, SIGNAL(rowFinished(int, double)), this, SLOT(rowFinished(int,double)), Qt::UniqueConnection);
     m_seriesMananger->runExperiments(experimentsNumber);
+    qApp->processEvents();
+//    m_computeMutex.unlock();
 }
 
 void MainWindow::rowFinished(int _row, double _value)
@@ -55,6 +51,9 @@ void MainWindow::rowFinished(int _row, double _value)
     m_ui->result->setItem(_row - MIN_MEM, 1, newItem);
 
     m_ui->progress->setValue(_row - MIN_MEM);
+
+//    if(m_ui->progress->value() == m_ui->progress->maximum())
+//        m_computeMutex.unlock();
 }
 
 void MainWindow::clear()
@@ -73,9 +72,12 @@ void MainWindow::clearInput()
 void MainWindow::plotGraphics(int _memory)
 {
     qDebug() << _memory << " plotGraphics";
-    m_plotter->plotGraphics(_memory, m_seriesMananger->report());
+    qDebug() << m_seriesMananger->report(_memory);
+    qDebug() << "--------------";
+
+    m_plotter->plotGraphics(m_seriesMananger->report(_memory));
     m_plotter->show();
-//    m_plotter->outputInConsole(m_seriesMananger->report());
+    m_plotter->outputInConsole(m_seriesMananger->report(_memory));
 }
 
 MainWindow::~MainWindow()

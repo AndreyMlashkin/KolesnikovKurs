@@ -28,7 +28,14 @@ void ExperimentSeriesMananger::runExperiments(int _n)
     m_isFinished = true;
 }
 
-const QMultiMap<int, int>& ExperimentSeriesMananger::report() const
+const QMap<int, int> ExperimentSeriesMananger::report(int _memory) const
 {
-    return m_report;
+    _memory += MIN_MEM;
+    QList<int> values = m_report.values(_memory);
+
+    QMap<int, int> ans;
+    foreach(int time, values)
+        ans[time] += 1;
+
+    return ans;
 }

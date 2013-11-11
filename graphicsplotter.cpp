@@ -36,25 +36,24 @@ void GraphicsPlotter::initChart()
     m_chart->resize(500, 500);
 }
 
-void GraphicsPlotter::plotGraphics(int _memory, const QMap<int, int>& _dispercy)
+void GraphicsPlotter::plotGraphics(const QMap<int, int>& _dispercy)
 {
-    _memory += MIN_MEM;
+//    _memory += MIN_MEM;
+//    QList<int> values = _dispercy.values(_memory);
+
+//    QMap<int, int> dispercy;
+//    foreach(int time, values)
+//        dispercy[time] += 1;
 
     QPen graphPen;
     graphPen.setColor(Qt::black);
     graphPen.setWidthF(5);
     m_chart->graph()->setPen(graphPen);
 
-    QList<int> values = _dispercy.values(_memory);
-
-    QMap<int, int> dispercy;
-    foreach(int time, values)
-        dispercy[time] += 1;
-
     QVector<double> time, quantaty;
 
     int minTime = 1000000000, maxTime = -1, maxQuataty = -1;
-    QMapIterator<int, int> i(dispercy);
+    QMapIterator<int, int> i(_dispercy);
     while(i.hasNext())
     {
         i.next();
@@ -75,7 +74,7 @@ void GraphicsPlotter::plotGraphics(int _memory, const QMap<int, int>& _dispercy)
 
     m_chart->replot();
     m_chart->show();
-    outputInConsole(dispercy);
+ //   outputInConsole(_dispercy);
 }
 
 void GraphicsPlotter::outputInConsole(const QMap<int, int> &_dispercy)

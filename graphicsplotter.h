@@ -12,7 +12,7 @@ class GraphicsPlotter : public QWidget
 public:
     explicit GraphicsPlotter(QWidget* _parent = 0);
 
-    void plotGraphics(int _memory, const QMap<int, int>& _dispercy);
+    void plotGraphics(const QMap<int, int>& _dispercy);
     void outputInConsole(const QMap<int, int>& _dispercy);
 
 private:

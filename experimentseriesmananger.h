@@ -10,7 +10,7 @@ class ExperimentSeriesMananger : public QObject
 public:
     explicit ExperimentSeriesMananger(QObject* _parent = 0);
     void runExperiments(int _n);
-    const QMultiMap<int, int>& report() const;
+    const QMap<int, int> report(int _memory) const;
 
 signals:
     void rowFinished(int _row, double _value);
