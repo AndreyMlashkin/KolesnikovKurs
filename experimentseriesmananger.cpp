@@ -5,14 +5,12 @@
 ExperimentSeriesMananger::ExperimentSeriesMananger(QObject* _parent)
     : QObject(_parent),
       m_isFinished(false)
-{
-
-
-}
+{}
 
 void ExperimentSeriesMananger::runExperiments(int _n)
 {
     m_isFinished = false;
+    m_report.clear();
     for(int i = MIN_MEM; i <= MAX_MEM; i++)
     {
         double average = 0;
@@ -20,7 +18,7 @@ void ExperimentSeriesMananger::runExperiments(int _n)
         {
             ExperimentMananger mananger(i);
             int res = mananger.calcTime();
-           // m_report.insert(i, res);
+            m_report.insert(i, res);
 
             average += res;
         }
@@ -28,4 +26,9 @@ void ExperimentSeriesMananger::runExperiments(int _n)
         emit rowFinished(i, average);
     }
     m_isFinished = true;
+}
+
+const QMultiMap<int, int>& ExperimentSeriesMananger::report() const
+{
+    return m_report;
 }

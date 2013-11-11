@@ -20,7 +20,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow),
-    m_chart(new QCustomPlot())
+    m_chart(new QCustomPlot()),
+    m_seriesMananger(new ExperimentSeriesMananger)
 {
     m_ui->setupUi(this);
     initChart();
@@ -33,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::compute()
 {
-    m_report.clear();
     int experimentsNumber = m_ui->expCount->text().toInt();
     if(experimentsNumber <= 0)
         return;
@@ -46,29 +46,12 @@ void MainWindow::compute()
 
     qApp->processEvents();
 
-//    for(int i = MIN_MEM; i <= MAX_MEM; i++)
-//    {
-//        double average = 0;
-//        for(int j = 0; j < experimentsNumber; j++)
-//        {
-//            ExperimentMananger mananger(i);
-//            int res = mananger.calcTime();
-//            m_report.insert(i, res);
-
-//            average += res;
-//        }
-//        average /= experimentsNumber;
-//        rowFinished(i, average);
-//    }
-    ExperimentSeriesMananger* m = new ExperimentSeriesMananger();
-  //  m->runExperiments(experimentsNumber);
-    connect(m, SIGNAL(rowFinished(int, double)), this, SLOT(rowFinished(int,double)));
-    m->runExperiments(experimentsNumber);
+    connect(m_seriesMananger, SIGNAL(rowFinished(int, double)), this, SLOT(rowFinished(int,double)));
+    m_seriesMananger->runExperiments(experimentsNumber);
 }
 
 void MainWindow::rowFinished(int _row, double _value)
 {
-    qDebug() << "rowFinished";
     QTableWidgetItem* newItem = new QTableWidgetItem("Memory: " + QString::number(_row));
     m_ui->result->setItem(_row - MIN_MEM, 0, newItem);
 
@@ -88,10 +71,6 @@ void MainWindow::initChart()
 {
     m_chart->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
                                     QCP::iSelectLegend | QCP::iSelectPlottables);
-
-//    m_chart->xAxis->setRange(MIN_MEM-1, MAX_MEM+1);
-//    m_chart->yAxis->setRange(0, 40);
-
     m_chart->axisRect()->setupFullAxesBox();
 
     m_chart->plotLayout()->insertRow(0);
@@ -118,7 +97,7 @@ void MainWindow::outputInConsole(const QMap<int, int> &_dispercy)
     static int num = 0;
     num++;
 
-    qDebug() << "\n--- Experiment N" << num << " ---";
+    qDebug() << "\n--- Plot N" << num << " ---";
 
     QMapIterator<int, int> i(_dispercy);
     while(i.hasNext())
@@ -145,7 +124,10 @@ void MainWindow::plotGraphics(int _memory)
     graphPen.setWidthF(5);
     m_chart->graph()->setPen(graphPen);
 
-    QList<int> values = m_report.values(_memory);
+    QList<int> values = m_seriesMananger->report().values(_memory);  //m_report.values(_memory);
+
+    qDebug() << _memory;
+    qDebug() << values;
 
     QMap<int, int> dispercy;
     foreach(int time, values)

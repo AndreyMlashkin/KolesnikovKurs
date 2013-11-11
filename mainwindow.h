@@ -37,8 +37,8 @@ private:
 
 private:
     Ui::MainWindow* m_ui;
-    QMultiMap<int, int> m_report;
     QCustomPlot* m_chart;
+    ExperimentSeriesMananger* m_seriesMananger;
 };
 
 #endif // MAINWINDOW_H
