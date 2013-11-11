@@ -20,7 +20,8 @@ SOURCES += main.cpp\
            simpletask.cpp \
            experimentmananger.cpp \
            qcustomplot/qcustomplot.cpp \
-    experimentseriesmananger.cpp
+    experimentseriesmananger.cpp \
+    graphicsplotter.cpp
 
 HEADERS += mainwindow.h \
            task.h \
@@ -29,6 +30,7 @@ HEADERS += mainwindow.h \
            experimentmananger.h \
            qcustomplot/qcustomplot.h \
     experimentseriesmananger.h \
-    modelapi.h
+    modelapi.h \
+    graphicsplotter.h
 
 FORMS    += mainwindow.ui

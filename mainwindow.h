@@ -5,8 +5,7 @@
 #include <QMultiMap>
 
 class ExperimentSeriesMananger;
-
-class QCustomPlot;
+class GraphicsPlotter;
 
 namespace Ui
 {
@@ -31,14 +30,11 @@ public slots:
 
 private:
     void clear();
-    inline void initChart();
-
-    void outputInConsole(const QMap<int, int>& _dispercy);
 
 private:
     Ui::MainWindow* m_ui;
-    QCustomPlot* m_chart;
     ExperimentSeriesMananger* m_seriesMananger;
+    GraphicsPlotter* m_plotter;
 };
 
 #endif // MAINWINDOW_H

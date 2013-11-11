@@ -15,12 +15,9 @@ public:
 signals:
     void rowFinished(int _row, double _value);
 
-public slots:
-
 private:
     bool m_isFinished;
     QMultiMap<int, int> m_report;
-
 };
 
 #endif // EXPERIMENTSERIESMANANGER_H
