@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "modelapi.h"
 #include "experimentseriesmananger.h"
 #include "experimentmananger.h"
@@ -26,6 +28,7 @@ void ExperimentSeriesMananger::runExperiments(int _n)
         emit rowFinished(i, average);
     }
     m_isFinished = true;
+//    mutex.unlock();
 }
 
 const QMap<int, int> ExperimentSeriesMananger::report(int _memory) const

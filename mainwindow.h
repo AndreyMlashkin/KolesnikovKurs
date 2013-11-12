@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QMutex>
 
 class ExperimentSeriesMananger;
 class GraphicsPlotter;
@@ -32,7 +31,6 @@ private:
     void clear();
 
 private:
-    QMutex m_computeMutex;
     Ui::MainWindow* m_ui;
     ExperimentSeriesMananger* m_seriesMananger;
     GraphicsPlotter* m_plotter;

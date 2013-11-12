@@ -15,14 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->setupUi(this);
 
     setFocus();
-    connect(m_ui->run, SIGNAL(clicked()), this, SLOT(compute()));
+    connect(m_ui->run, SIGNAL(clicked()), this, SLOT(compute()), Qt::QueuedConnection);
     connect(m_ui->expCount, SIGNAL(cursorPositionChanged(int,int)), SLOT(clearInput()));
     connect(m_ui->result, SIGNAL(cellClicked(int,int)), this, SLOT(plotGraphics(int)));
 }
 
 void MainWindow::compute()
 {
-//    m_computeMutex.lock();
+    m_ui->run->blockSignals(true);
     int experimentsNumber = m_ui->expCount->text().toInt();
     if(experimentsNumber <= 0)
         return;
@@ -38,7 +38,7 @@ void MainWindow::compute()
     connect(m_seriesMananger, SIGNAL(rowFinished(int, double)), this, SLOT(rowFinished(int,double)), Qt::UniqueConnection);
     m_seriesMananger->runExperiments(experimentsNumber);
     qApp->processEvents();
-//    m_computeMutex.unlock();
+    m_ui->run->blockSignals(false);
 }
 
 void MainWindow::rowFinished(int _row, double _value)
