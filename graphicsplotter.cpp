@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QVector>
 
 #include "qcustomplot/qcustomplot.h"
 #include "modelapi.h"
@@ -38,13 +39,6 @@ void GraphicsPlotter::initChart()
 
 void GraphicsPlotter::plotGraphics(const QMap<int, int>& _dispercy)
 {
-//    _memory += MIN_MEM;
-//    QList<int> values = _dispercy.values(_memory);
-
-//    QMap<int, int> dispercy;
-//    foreach(int time, values)
-//        dispercy[time] += 1;
-
     QPen graphPen;
     graphPen.setColor(Qt::black);
     graphPen.setWidthF(5);
@@ -74,7 +68,43 @@ void GraphicsPlotter::plotGraphics(const QMap<int, int>& _dispercy)
 
     m_chart->replot();
     m_chart->show();
- //   outputInConsole(_dispercy);
+}
+
+inline void calculateExpectedValueAndVariance(qreal& _expectedValue, qreal& _variance, const QMap<int, int>& _dispercy)
+{
+    qreal experimentsNumber = 0;
+    QMapIterator<int, int> i(_dispercy);
+    while(i.hasNext())
+    {
+        i.next();
+        experimentsNumber += i.value();
+    }
+    qDebug() << "experimentsNumber " << experimentsNumber;
+
+    i.toFront();
+    while(i.hasNext())
+    {
+        i.next();
+
+        int tmp = i.key() * (i.value());
+        _expectedValue += tmp;
+        _variance += tmp * i.key();
+    }
+
+    _expectedValue /= experimentsNumber;
+    _variance /= experimentsNumber;
+    _variance -= _expectedValue * _expectedValue;
+
+//    qDebug() << "_expectedValue " << _expectedValue;
+//    qDebug() << "_variance: " << _variance;
+}
+
+void GraphicsPlotter::plotIdealDistribution(const QMap<int, int> &_dispercy)
+{
+    qreal expectedValue(0), variance(0);
+    calculateExpectedValueAndVariance(expectedValue, variance, _dispercy);
+
+    qDebug() << expectedValue << variance;
 }
 
 void GraphicsPlotter::outputInConsole(const QMap<int, int> &_dispercy)

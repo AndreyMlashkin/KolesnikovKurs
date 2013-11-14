@@ -77,7 +77,11 @@ void MainWindow::plotGraphics(int _memory)
 
     m_plotter->plotGraphics(m_seriesMananger->report(_memory));
     m_plotter->show();
+
     m_plotter->outputInConsole(m_seriesMananger->report(_memory));
+
+//    int experimentsNumber = m_ui->expCount->text().toInt();
+    m_plotter->plotIdealDistribution(m_seriesMananger->report(_memory));
 }
 
 MainWindow::~MainWindow()
