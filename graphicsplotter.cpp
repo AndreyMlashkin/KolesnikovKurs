@@ -40,7 +40,7 @@ void GraphicsPlotter::initChart()
         m_chart->addGraph();
         m_chart->graph(1)->setLineStyle(QCPGraph::lsLine);
 
-        m_chart->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssPlus, 7));
+      //  m_chart->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssPlus, 7));
         m_chart->graph(1)->setName("Ideal Dispercy");
     }
 
@@ -48,6 +48,12 @@ void GraphicsPlotter::initChart()
     graphPen.setColor(Qt::black);
     graphPen.setWidthF(5);
     m_chart->graph(0)->setPen(graphPen);
+
+    QPen idealGraphPen;
+    idealGraphPen.setColor(Qt::blue);
+    idealGraphPen.setWidthF(3);
+    m_chart->graph(1)->setPen(idealGraphPen);
+
 
     m_chart->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
                                     QCP::iSelectLegend | QCP::iSelectPlottables);
@@ -113,24 +119,30 @@ void GraphicsPlotter::plotIdealDistribution(const QMap<int, int> &_dispercy)
 {
     qreal expectedValue(0), variance(0);
     int experimentsNumber(0);
-
     calculateExpectedValueAndVariance(expectedValue, variance, experimentsNumber, _dispercy);
 //    qDebug() << "expectedValue: " << expectedValue << "variance: " << variance;
 
     QVector<double> time, data;
-    QMapIterator<int, int> i(_dispercy);
-    while(i.hasNext())
-    {
-        i.next();
-        int x = i.key();
 
-        time << x;
-        data << (1/(qSqrt(2*M_PI*variance))*qExp(-pow((x-expectedValue),2)/(2*variance))) * experimentsNumber;
+    double start = _dispercy.begin().key();
+    double end = (_dispercy.end()-1).key();
+
+    bool isRightOffsetMore = (end - expectedValue) > (expectedValue - start);
+    if(isRightOffsetMore)
+        start = expectedValue - (end - expectedValue);
+    else
+        end = expectedValue + (expectedValue - start);
+
+    double i = start;
+    while(i < end)
+    {
+        time << i;
+        data << (1/(qSqrt(2*M_PI*variance))*qExp(-pow((i-expectedValue),2)/(2*variance))) * experimentsNumber;
+
+        i += 0.1;
     }
-//    qDebug() << data;
 
     m_chart->graph(1)->setData(time, data);
-
     m_chart->replot();
     m_chart->show();
 }
