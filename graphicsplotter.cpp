@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QVector>
+#include <QtMath>
 
 #include "qcustomplot/qcustomplot.h"
 #include "modelapi.h"
@@ -14,36 +15,48 @@ GraphicsPlotter::GraphicsPlotter(QWidget* _parent) :
 
 void GraphicsPlotter::initChart()
 {
-    m_chart->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
-                                    QCP::iSelectLegend | QCP::iSelectPlottables);
     m_chart->axisRect()->setupFullAxesBox();
 
     m_chart->plotLayout()->insertRow(0);
-    m_chart->plotLayout()->addElement(0, 0, new QCPPlotTitle(m_chart, tr("Time")));
+    m_chart->plotLayout()->addElement(0, 0, new QCPPlotTitle(m_chart, tr("Dispersy")));
 
-    m_chart->xAxis->setLabel("Memory");
-    m_chart->yAxis->setLabel("Time");
+    m_chart->xAxis->setLabel("Time");
+    m_chart->yAxis->setLabel("Quantaty");
     m_chart->legend->setVisible(true);
     QFont legendFont = font();
     legendFont.setPointSize(10);
 
-    if(!m_chart->graph())
+    if(!m_chart->graph(0))
+    {
+        m_chart->addGraph(0);
+        m_chart->graph(0)->setLineStyle(QCPGraph::lsLine);
+
+        m_chart->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, 7));
+        m_chart->graph(0)->setName("Experiment");
+    }
+
+    if(!m_chart->graph(1))
     {
         m_chart->addGraph();
-        m_chart->graph()->setLineStyle(QCPGraph::lsLine);
+        m_chart->graph(1)->setLineStyle(QCPGraph::lsLine);
 
-        m_chart->graph()->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, 7));
+        m_chart->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssPlus, 7));
+        m_chart->graph(1)->setName("Ideal Dispercy");
     }
+
+    QPen graphPen;
+    graphPen.setColor(Qt::black);
+    graphPen.setWidthF(5);
+    m_chart->graph(0)->setPen(graphPen);
+
+    m_chart->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
+                                    QCP::iSelectLegend | QCP::iSelectPlottables);
+
     m_chart->resize(500, 500);
 }
 
 void GraphicsPlotter::plotGraphics(const QMap<int, int>& _dispercy)
 {
-    QPen graphPen;
-    graphPen.setColor(Qt::black);
-    graphPen.setWidthF(5);
-    m_chart->graph()->setPen(graphPen);
-
     QVector<double> time, quantaty;
 
     int minTime = 1000000000, maxTime = -1, maxQuataty = -1;
@@ -61,7 +74,7 @@ void GraphicsPlotter::plotGraphics(const QMap<int, int>& _dispercy)
         if(maxQuataty < i.value())
             maxQuataty = i.value();
     }
-    m_chart->graph()->setData(time, quantaty);
+    m_chart->graph(0)->setData(time, quantaty);
 
     m_chart->xAxis->setRange(minTime-1, maxTime + 1);
     m_chart->yAxis->setRange(0, maxQuataty);
@@ -70,17 +83,17 @@ void GraphicsPlotter::plotGraphics(const QMap<int, int>& _dispercy)
     m_chart->show();
 }
 
-inline void calculateExpectedValueAndVariance(qreal& _expectedValue, qreal& _variance, const QMap<int, int>& _dispercy)
+inline void calculateExpectedValueAndVariance(qreal& _expectedValue, qreal& _variance, int& _experimentsNumber, const QMap<int, int>& _dispercy)
 {
-    qreal experimentsNumber = 0;
+    _expectedValue = 0;
+    _variance = 0;
+
     QMapIterator<int, int> i(_dispercy);
     while(i.hasNext())
     {
         i.next();
-        experimentsNumber += i.value();
+        _experimentsNumber += i.value();
     }
-    qDebug() << "experimentsNumber " << experimentsNumber;
-
     i.toFront();
     while(i.hasNext())
     {
@@ -91,20 +104,35 @@ inline void calculateExpectedValueAndVariance(qreal& _expectedValue, qreal& _var
         _variance += tmp * i.key();
     }
 
-    _expectedValue /= experimentsNumber;
-    _variance /= experimentsNumber;
+    _expectedValue /= _experimentsNumber;
+    _variance /= _experimentsNumber;
     _variance -= _expectedValue * _expectedValue;
-
-//    qDebug() << "_expectedValue " << _expectedValue;
-//    qDebug() << "_variance: " << _variance;
 }
 
 void GraphicsPlotter::plotIdealDistribution(const QMap<int, int> &_dispercy)
 {
     qreal expectedValue(0), variance(0);
-    calculateExpectedValueAndVariance(expectedValue, variance, _dispercy);
+    int experimentsNumber(0);
 
-    qDebug() << expectedValue << variance;
+    calculateExpectedValueAndVariance(expectedValue, variance, experimentsNumber, _dispercy);
+//    qDebug() << "expectedValue: " << expectedValue << "variance: " << variance;
+
+    QVector<double> time, data;
+    QMapIterator<int, int> i(_dispercy);
+    while(i.hasNext())
+    {
+        i.next();
+        int x = i.key();
+
+        time << x;
+        data << (1/(qSqrt(2*M_PI*variance))*qExp(-pow((x-expectedValue),2)/(2*variance))) * experimentsNumber;
+    }
+//    qDebug() << data;
+
+    m_chart->graph(1)->setData(time, data);
+
+    m_chart->replot();
+    m_chart->show();
 }
 
 void GraphicsPlotter::outputInConsole(const QMap<int, int> &_dispercy)
